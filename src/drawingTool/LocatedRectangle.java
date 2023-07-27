@@ -1,0 +1,43 @@
+package drawingTool;
+
+import java.awt.PageAttributes;
+import java.awt.Point;
+
+public interface LocatedRectangle {
+	
+	public Point address();
+	public int width();
+	public int length();
+	public void draw();
+
+	public default boolean intersects(LocatedRectangle other) {
+		return !doesNotIntersect(other, 0);
+	}	
+	
+	public default boolean intersects(LocatedRectangle other, int margin) {
+		return !doesNotIntersect(other, margin);
+	}
+
+	private boolean doesNotIntersect(LocatedRectangle other, int margin) {
+		return 	leftOf(other, margin) || rightOf(other, margin) || 
+				above(other, margin) || below(other, margin);
+	}
+	
+	public default boolean leftOf(LocatedRectangle other, int margin){
+		return this.address().x + this.width() + margin < other.address().x;
+	}
+	
+	public default boolean rightOf(LocatedRectangle other, int margin){
+		return this.address().x > other.address().x + other.width() + margin;
+	}
+	
+	private boolean above(LocatedRectangle other, int margin) {
+		return this.address().y - this.length() - margin > other.address().y;
+	}
+	
+	private boolean below(LocatedRectangle other, int margin) {
+		return this.address().y < other.address().y - other.length() - margin;
+	}
+	
+
+}
